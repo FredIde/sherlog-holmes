@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="RUBY_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bin" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="bundler (v1.10.6, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="power_assert (v0.2.4, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="term-ansicolor (v1.3.2, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="test-unit (v3.1.5, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tins (v1.6.0, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="yummi (v0.9.5, RVM: ruby-2.2-head) [gem]" level="application" />
+  </component>
+</module>
