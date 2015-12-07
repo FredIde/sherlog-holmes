@@ -1,30 +1,39 @@
 module Sherlog
   class LogParser
 
-    def initialize(config, filter = nil)
-      @config = config
-      @config[:patterns][:exception] ||= /^$/
-      @config[:patterns][:stacktrace] ||= /^$/
+    def initialize
+      @patterns = {
+          entry: /(?<message>.+)/,
+          exception: /^$/,
+          stacktrace: /^$/
+      }
+      @filter = filter { |entry| true }
+    end
 
-      @filter = filter
-      @filter ||= LogFilter::new { |entry| true }
+    def filter(filter = nil, &block)
+      @filter = filter if filter
+      @filter = LogFilter::new &block if block
+    end
+
+    def patterns(config)
+      @patterns.merge! config
     end
 
     def parse(input)
       result = Log::new
       entry = nil
       foreach input do |line|
-        if @config[:patterns][:entry] =~ line
+        if @patterns[:entry] =~ line
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
           entry = LogEntry::new entry_data
           entry.exception =
-              Regexp.last_match[:exception] if @config[:patterns][:exception] =~ entry.message
+              Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
           if @filter.accept? entry
             result << entry
           end
         else
           if entry
-            if entry.exception? and @config[:patterns][:stacktrace] =~ line
+            if entry.exception? and @patterns[:stacktrace] =~ line
               entry.stacktrace << line.chomp
             else
               entry << line.chomp

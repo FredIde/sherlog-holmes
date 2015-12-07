@@ -4,17 +4,23 @@ describe LogParser do
 
   describe '#parse' do
     before(:each) do
-      @config = {
-          patterns: {
-              entry: /(?<time>[0-9,.:]+)\s+(?<level>\w+)\s+\[(?<category>\S+)\]\s\((?<origin>[^)]+)\)?\s?(?<message>.+)/,
-              exception: /(?<exception>\w+(\.\w+)+(Exception|Error))/,
-              stacktrace: /^(\s+at)|(Caused by)/
-          }
-      }
       @filter = double LogFilter
       allow(@filter).to receive(:accept?).and_return(true)
 
-      @parser = LogParser::new @config, @filter
+      @parser = LogParser::new
+      @parser.filter @filter
+      @parser.patterns entry: /
+                                (?<time>[0-9,.:]+)
+                                \s+
+                                (?<level>\w+)
+                                \s+
+                                \[(?<category>\S+)\]
+                                \s
+                                \((?<origin>[^)]+)\)?\s?
+                                (?<message>.+)
+                              /x,
+                       exception: /(?<exception>\w+(\.\w+)+(Exception|Error))/,
+                       stacktrace: /^(\s+at)|(Caused by)/
     end
 
     it 'should use the given filter' do
