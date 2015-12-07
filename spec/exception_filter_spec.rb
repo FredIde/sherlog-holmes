@@ -3,8 +3,8 @@ require 'spec_helper'
 describe LogFilter do
 
   before :all do
-    @nullpointer_entry = LogEntry::new exception_class: 'some.bla.NullPointerException'
-    @generic_exception_entry = LogEntry::new exception_class: 'some.bla.Exception'
+    @nullpointer_entry = LogEntry::new exception: 'some.bla.NullPointerException'
+    @generic_exception_entry = LogEntry::new exception: 'some.bla.Exception'
     @no_exception_entry = LogEntry::new message: 'Everything went well'
   end
 

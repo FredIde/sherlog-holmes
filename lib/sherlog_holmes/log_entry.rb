@@ -1,7 +1,7 @@
 module Sherlog
   class LogEntry
 
-    attr_accessor :time, :level, :category, :origin, :message, :exception_class
+    attr_accessor :time, :level, :category, :origin, :message, :exception, :stacktrace
 
     def initialize(params = {})
       @time = params[:time]
@@ -9,16 +9,16 @@ module Sherlog
       @category = params[:category]
       @origin = params[:origin]
       @message = params[:message]
-      @exception_class = params[:exception_class]
+      @exception = params[:exception]
       @stacktrace = []
     end
 
     def exception?
-      !@exception_class.nil?
+      !@exception.nil?
     end
 
     def <<(line)
-      @stacktrace << line
+      @message << $/ << line
     end
 
     def to_s
