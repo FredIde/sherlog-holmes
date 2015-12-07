@@ -42,7 +42,7 @@ module Sherlog
 
     def self.message(expression)
       filter do |entry|
-        /#{expression}/i.match entry.category
+        entry.message.to_s.downcase.index expression.to_s.downcase
       end
     end
 
