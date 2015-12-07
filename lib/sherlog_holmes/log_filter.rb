@@ -32,8 +32,10 @@ module Sherlog
 
     def self.category(expression)
       filter do |entry|
-        if expression.index '*'
-          /#{expression.gsub('.', '\.').gsub('*', '.*')}/i.match entry.category
+        if expression.start_with? '*'
+          entry.category.to_s.end_with? expression[1..-1]
+        elsif expression.end_with? '*'
+          entry.category.to_s.start_with? expression[0...-1]
         else
           entry.category.to_s == expression.to_s
         end

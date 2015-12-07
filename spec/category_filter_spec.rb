@@ -23,7 +23,11 @@ describe LogFilter, '#category' do
     expect(filter.accept? @devnull_entry).to be_truthy
     expect(filter.accept? @other_entry).to be_falsey
 
-    expect(filter.accept? LogEntry::new(category: 'tools|devnull')).to be_falsey
+    filter = LogFilter::category '*devnull'
+
+    expect(filter.accept? @sherlog_entry).to be_falsey
+    expect(filter.accept? @devnull_entry).to be_truthy
+    expect(filter.accept? @other_entry).to be_falsey
   end
 
 end
