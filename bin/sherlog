@@ -21,16 +21,6 @@ end
   @filter_params[:level] = expression
 end
 
-[:error, :info, :warn, :debug, :fatal].each do |level|
-  @opts.on "--#{level}", "Filter #{level.upcase} logs" do
-    if @filter_params[:level]
-      @filter_params[:level] += "|#{level}"
-    else
-      @filter_params[:level] = level.to_s
-    end
-  end
-end
-
 @opts.on '-m EXPRESSION', '--message EXPRESSION', 'Set the message filter regexp' do |expression|
   @filter_params[:message] = expression
 end

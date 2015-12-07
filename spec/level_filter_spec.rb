@@ -21,14 +21,6 @@ describe LogFilter, '#level' do
     expect(@debug_filter.accept? @error_entry).to be_falsey
   end
 
-  it 'should filter ignoring case' do
-    expect(@info_filter.accept? LogEntry::new(level: 'INFO')).to be_truthy
-    expect(@info_filter.accept? LogEntry::new(level: 'Info')).to be_truthy
-
-    expect(@debug_filter.accept? LogEntry::new(level: 'DEBUG')).to be_truthy
-    expect(@debug_filter.accept? LogEntry::new(level: 'Debug')).to be_truthy
-  end
-
   it 'should filter only the matched level' do
     expect(@info_filter.accept? LogEntry::new(category: :information)).to be_falsey
   end
