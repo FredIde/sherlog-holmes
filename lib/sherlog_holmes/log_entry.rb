@@ -9,11 +9,8 @@ module Sherlog
       @category = params[:category]
       @origin = params[:origin]
       @message = params[:message]
+      @exception_class = params[:exception_class]
       @stacktrace = []
-      data = /(\w+(\.\w+)+(Exception|Error))/.match @message
-      if data
-        @exception_class = data[1]
-      end
     end
 
     def exception?

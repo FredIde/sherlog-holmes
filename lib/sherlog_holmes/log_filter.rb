@@ -50,7 +50,13 @@ module Sherlog
 
     def self.exception(expression)
       filter do |entry|
-        /#{expression}/.match entry.category
+        if expression.start_with? '*'
+          entry.exception_class.to_s.end_with? expression[1..-1]
+        elsif expression.end_with? '*'
+          entry.exception_class.to_s.start_with? expression[0...-1]
+        else
+          entry.exception_class.to_s == expression.to_s
+        end
       end
     end
 
