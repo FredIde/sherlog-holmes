@@ -22,11 +22,14 @@ module Sherlog
     end
 
     def to_s
-      string = if origin
-                 '%s %s [%s] (%s) %s' % [time, level.ljust(7), category, origin, message]
-               else
-                 '%s %s [%s] %s' % [time, level.ljust(7), category, message]
-               end
+      format = []
+      params = []
+      format << '%s' && params << time if time
+      format << '|%s|' && params << level.to_s.ljust(7) if level
+      format << '[%s]' && params << category if category
+      format << '(%s)' && params << origin if origin
+      format << '%s' && params << message if message
+      string = format.join(' ') % params
       ([string] + @stacktrace).join($/)
     end
 
