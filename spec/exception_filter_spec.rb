@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe LogFilter do
+describe Filter do
 
   before :all do
-    @nullpointer_entry = LogEntry::new exception: 'some.bla.NullPointerException'
-    @generic_exception_entry = LogEntry::new exception: 'some.bla.Exception'
-    @no_exception_entry = LogEntry::new message: 'Everything went well'
+    @nullpointer_entry = Entry::new exception: 'some.bla.NullPointerException'
+    @generic_exception_entry = Entry::new exception: 'some.bla.Exception'
+    @no_exception_entry = Entry::new message: 'Everything went well'
   end
 
   describe '#exception' do
     it 'should filter entries correctly' do
-      filter = LogFilter::exception 'some.bla.NullPointerException'
+      filter = Filter::exception 'some.bla.NullPointerException'
 
       expect(filter.accept? @nullpointer_entry).to be_truthy
       expect(filter.accept? @generic_exception_entry).to be_falsey
@@ -18,13 +18,13 @@ describe LogFilter do
     end
 
     it 'should expect wildcards' do
-      filter = LogFilter::exception '*NullPointerException'
+      filter = Filter::exception '*NullPointerException'
 
       expect(filter.accept? @nullpointer_entry).to be_truthy
       expect(filter.accept? @generic_exception_entry).to be_falsey
       expect(filter.accept? @no_exception_entry).to be_falsey
 
-      filter = LogFilter::exception 'some.bla*'
+      filter = Filter::exception 'some.bla*'
 
       expect(filter.accept? @nullpointer_entry).to be_truthy
       expect(filter.accept? @generic_exception_entry).to be_truthy
@@ -34,7 +34,7 @@ describe LogFilter do
 
   describe '#exceptions' do
     it 'should filter entries correctly' do
-      filter = LogFilter::exceptions
+      filter = Filter::exceptions
 
       expect(filter.accept? @nullpointer_entry).to be_truthy
       expect(filter.accept? @generic_exception_entry).to be_truthy

@@ -1,5 +1,5 @@
 module Sherlog
-  class LogEntry
+  class Entry
 
     attr_accessor :time, :level, :category, :origin, :message, :exception, :stacktrace
 

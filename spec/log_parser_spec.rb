@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe LogParser do
+describe Parser do
 
   describe '#parse' do
     before(:each) do
-      @filter = double LogFilter
+      @filter = double Filter
       allow(@filter).to receive(:accept?).and_return(true)
 
-      @parser = LogParser::new
+      @parser = Parser::new
       @parser.filter @filter
       @parser.patterns entry: /
                                 (?<time>[0-9,.:]+)

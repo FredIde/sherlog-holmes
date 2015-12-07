@@ -16,7 +16,7 @@ module Sherlog
     end
 
     def exceptions
-      entries filter: LogFilter::exceptions
+      entries filter: Filter::exceptions
     end
 
     def size

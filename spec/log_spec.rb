@@ -9,14 +9,14 @@ describe Log do
     end
 
     it 'should add entries' do
-      @log << LogEntry::new
+      @log << Entry::new
 
       expect(@log.entries.size).to eq(1)
     end
 
     it 'should maintain the order the entries are added' do
-      entry_a = LogEntry::new
-      entry_b = LogEntry::new
+      entry_a = Entry::new
+      entry_b = Entry::new
 
       @log << entry_a << entry_b
 
@@ -25,9 +25,9 @@ describe Log do
     end
 
     it 'should filter entries if a filter is given' do
-      @log << LogEntry::new(level: :info) << LogEntry::new(level: :error)
+      @log << Entry::new(level: :info) << Entry::new(level: :error)
 
-      expect(@log.entries(filter: LogFilter::level(:error)).size).to eq(1)
+      expect(@log.entries(filter: Filter::level(:error)).size).to eq(1)
     end
 
   end

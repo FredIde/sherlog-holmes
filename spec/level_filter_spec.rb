@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe LogFilter, '#level' do
+describe Filter, '#level' do
 
   before :all do
-    @info_entry = LogEntry::new level: :info
-    @debug_entry = LogEntry::new level: :debug
-    @error_entry = LogEntry::new level: :error
+    @info_entry = Entry::new level: :info
+    @debug_entry = Entry::new level: :debug
+    @error_entry = Entry::new level: :error
 
-    @info_filter = LogFilter::level :info
-    @debug_filter = LogFilter::level :debug
+    @info_filter = Filter::level :info
+    @debug_filter = Filter::level :debug
   end
 
   it 'should filter entries correctly' do
@@ -22,7 +22,7 @@ describe LogFilter, '#level' do
   end
 
   it 'should filter only the matched level' do
-    expect(@info_filter.accept? LogEntry::new(category: :information)).to be_falsey
+    expect(@info_filter.accept? Entry::new(category: :information)).to be_falsey
   end
 
 end

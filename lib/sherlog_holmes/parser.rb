@@ -1,5 +1,5 @@
 module Sherlog
-  class LogParser
+  class Parser
 
     def initialize
       @patterns = {
@@ -12,7 +12,7 @@ module Sherlog
 
     def filter(filter = nil, &block)
       @filter = filter if filter
-      @filter = LogFilter::new &block if block
+      @filter = Filter::new &block if block
     end
 
     def patterns(config)
@@ -25,7 +25,7 @@ module Sherlog
       foreach input do |line|
         if @patterns[:entry] =~ line
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
-          entry = LogEntry::new entry_data
+          entry = Entry::new entry_data
           entry.exception =
               Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
           if @filter.accept? entry

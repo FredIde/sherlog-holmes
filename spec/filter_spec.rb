@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe LogFilter do
+describe Filter do
 
   before :all do
-    @true = LogFilter::new { |o| true }
-    @false = LogFilter::new { |o| false }
+    @true = Filter::new { |o| true }
+    @false = Filter::new { |o| false }
   end
 
   describe '#and' do
