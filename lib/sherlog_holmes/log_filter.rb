@@ -26,7 +26,7 @@ module Sherlog
 
     def self.level(expression)
       filter do |entry|
-        /#{expression}/i.match entry.level
+        entry.level.to_s.downcase == expression.to_s.downcase
       end
     end
 

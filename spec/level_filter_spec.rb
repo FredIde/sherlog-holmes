@@ -29,4 +29,8 @@ describe LogFilter, '#level' do
     expect(@debug_filter.accept? LogEntry::new(level: 'Debug')).to be_truthy
   end
 
+  it 'should filter only the matched level' do
+    expect(@info_filter.accept? LogEntry::new(category: :information)).to be_falsey
+  end
+
 end
