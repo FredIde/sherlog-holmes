@@ -31,8 +31,14 @@ module Sherlog
     end
 
     def self.category(expression)
-      filter do |entry|
-        /#{expression}/.match entry.category
+      if expression.index '*'
+        filter do |entry|
+          /#{expression.gsub('.', '\.').gsub('*', '.*')}/i.match entry.category
+        end
+      else
+        filter do |entry|
+          entry.category.to_s == expression.to_s
+        end
       end
     end
 
