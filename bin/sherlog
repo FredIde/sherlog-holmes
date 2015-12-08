@@ -80,7 +80,10 @@ parser.filter @filter
   parser.on_new_entry listener
 end
 begin
-  parser.parse file
+  parser.parse file if file
+  ARGF.each_line do |line|
+    parser.parse line.chomp
+  end
 rescue Interrupt
   exit
 end
