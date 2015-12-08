@@ -43,7 +43,7 @@ end
   add_filter Filter::exception(expression)
 end
 
-@opts.on '--only-exceptions', 'Filter only exception entries' do
+@opts.on '--any-exception', 'Filter exception entries' do
   add_filter Filter::exceptions
 end
 
@@ -57,7 +57,7 @@ end
 
 @opts.on '--print', 'Prints the filtered entries' do
   @listeners << lambda do |entry|
-    puts entry
+    puts entry.raw_content
   end
 end
 
@@ -74,4 +74,8 @@ parser.filter @filter
 @listeners.each do |listener|
   parser.on_new_entry listener
 end
-parser.parse file
+begin
+  parser.parse file
+rescue Interrupt
+  exit
+end
