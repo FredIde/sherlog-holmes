@@ -29,8 +29,8 @@ Sherlog works by grabbing every line of a log and parsing it into a simple struc
 - Category
 - Origin
 - Message
-- Exception (if present)
-- Stacktrace (if present)
+- Exception
+- Stacktrace
 
 You need to supply a regular expression that maps that fields to match your log entry. Here is an example:
 
@@ -49,7 +49,7 @@ jboss:
   stacktrace: ^(\s+at)|(Caused by\:)|(\s+\.{3}\s\d+\smore)
 ```
 
-The configuration should contain a unique id and at least a pattern for the log **entry**. Place you configuration file in a `*.yml` file inside you `$HOME/.sherlog/patterns` directory and you're ready to go!
+The configuration should contain a unique id and at least a pattern for the log **entry**. Place you configuration file in a `*.yml` file inside your `$HOME/.sherlog/patterns` directory and you're ready to go!
 
 ## Usage
 
