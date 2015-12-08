@@ -1,6 +1,8 @@
 # Sherlog Holmes
 
-This is a gem to help the analysis of logs
+*Less data containing useful information is way better than lots of data containing a mess.*
+
+Don't you hate thousands of lines in a log blowing up with your troubleshooting? Lots of useless data that you have to filter just to turn that 300 MB of madness into a 30 KB of useful information. If you need something that can rip off useless entries so you can have a clue about what is going on with that application, you should give Sherlog Holmes a try.
 
 ## Installation
 
@@ -18,9 +20,48 @@ Or install it yourself as:
 
     $ gem install sherlog-holmes
 
+## Concepts
+
+Sherlog works by grabbing every line of a log and parsing it into a simple structure containing:
+
+- Time
+- Level
+- Category
+- Origin
+- Message
+- Exception (if present)
+- Stacktrace (if present)
+
+You need to supply a regular expression that maps that fields to match your log entry. Here is an example:
+
+```regexp
+(<?level>\w+)\s(<?category>\s+)\s(<?message>.+)
+```
+
+Notice that you don't need to define every field, just the ones you need to filter.
+
+Patterns for exception and stacktrace should be defined separately. The exception pattern is used only in the message field. Here is a complete example of a pattern configuration:
+
+```yaml
+jboss:
+  entry: (?<time>[0-9,.:]+)\s+(?<level>\w+)\s+\[(?<category>\S+)\]\s\((?<origin>[^)]+)\)?\s?(?<message>.+)
+  exception: (?<exception>\w+(\.\w+)+(Exception|Error))
+  stacktrace: ^(\s+at)|(Caused by\:)|(\s+\.{3}\s\d+\smore)
+```
+
+The configuration should contain a unique id and at least a pattern for the log **entry**. Place you configuration file in a `*.yml` file inside you `$HOME/.sherlog/patterns` directory and you're ready to go!
+
 ## Usage
 
-Shelog Holmes provides a command line tool `sherlog`. Execute `sherlog -h` to see the options and command usage.
+Shelog Holmes provides the command line tool `sherlog`. You can use this to pass a log, the filters you need to apply and the process that needs to be executed (like showing the filtered entries or counting the exceptions):
+
+`-p, --patterns FILE`
+
+Additionally to having definitions in your `$HOME/.sherlog` directory, you can pass a definition file from anywhere in your machine and Sherlog will scan and register the definitions.
+
+`-c, --category EXPRESSION`
+
+This will filter entries using the category field. You can use the wildcard `*` here.
 
 ## License
 
