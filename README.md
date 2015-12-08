@@ -63,6 +63,44 @@ Additionally to having definitions in your `$HOME/.sherlog` directory, you can p
 
 This will filter entries using the category field. You can use the wildcard `*` here.
 
+`-l, --level EXPRESSION`
+
+This will filter entries using the level field. You can use the wildcard `*` here.
+
+`-o, --origin EXPRESSION`
+
+This will filter entries using the origin field. You can use the wildcard `*` here.
+
+`-m, --message EXPRESSION`
+
+This will filter entries using the message field. You can use the wildcard `*` here.
+
+`-e, --exception EXPRESSION`
+
+This will filter entries using the exception field. You can use the wildcard `*` here.
+
+*NOTICE: the expressions are case sensitive, wildcards can be used at start, end or both*
+
+`--any-exception`
+
+This will filter entries with exceptions, regardless the kind.
+
+`--and`
+
+This will use the **AND** operation to connect the next filter. This is the default operation.
+
+`--or`
+
+This will use the **OR** operation to connect the next filter.
+
+    sherlog --level WARN --or --level ERROR --and --any-exception
+
+This is equivalent to:
+
+    (WARN || ERROR) && EXCEPTION
+
+*NOTICE: you cannot do some fuzzy logics with these operations because there are no options to define the precedence*
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
