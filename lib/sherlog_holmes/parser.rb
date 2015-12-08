@@ -41,6 +41,7 @@ module Sherlog
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
           notify entry
           entry = Entry::new entry_data
+          entry.raw_content = line.chomp
           entry.exception = Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
           entry = nil unless @filter.accept? entry
         else
@@ -50,6 +51,7 @@ module Sherlog
             else
               entry << line.chomp
             end
+            entry.raw_content << $/ << line.chomp
           end
         end
       end

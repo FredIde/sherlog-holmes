@@ -1,7 +1,7 @@
 module Sherlog
   class Entry
 
-    attr_accessor :time, :level, :category, :origin, :message, :exception, :stacktrace
+    attr_accessor :time, :level, :category, :origin, :message, :exception, :stacktrace, :raw_content
 
     def initialize(params = {})
       @time = params[:time]
@@ -25,7 +25,7 @@ module Sherlog
       format = []
       params = []
       format << '%s' && params << time if time
-      format << '|%s|' && params << level.to_s.ljust(7) if level
+      format << '%s' && params << level.to_s.ljust(7) if level
       format << '[%s]' && params << category if category
       format << '(%s)' && params << origin if origin
       format << '%s' && params << message if message
