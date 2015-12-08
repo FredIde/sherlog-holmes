@@ -8,49 +8,57 @@ require_relative '../lib/sherlog_holmes'
 include Sherlog
 
 @opts = OptionParser::new
-@filter_params = {}
-@params = {}
+@stacktrace = true
+@filter = nil
+@operation = :and
+@listeners = []
 
-@opts.banner = 'Usage: sherlog [options] <logfile>'
-
-@opts.on '-c EXPRESSION', '--category EXPRESSION', 'Set the category filter regexp' do |expression|
-  @filter_params[:category] = expression
+def add_filter(filter)
+  if @filter
+    @filter = @filter.send @operation, filter
+  else
+    @filter = filter
+  end
 end
 
-@opts.on '-l EXPRESSION', '--level EXPRESSION', 'Set the level filter regexp' do |expression|
-  @filter_params[:level] = expression
+@opts.banner = 'Usage: sherlog [options] <type> <logfile>'
+
+@opts.on '-p FILE', '--patterns FILE', 'Configures the patterns' do |file|
+  Sherlog.load_patterns file
 end
 
-@opts.on '-m EXPRESSION', '--message EXPRESSION', 'Set the message filter regexp' do |expression|
-  @filter_params[:message] = expression
+@opts.on '-c EXPRESSION', '--category EXPRESSION', 'Set the category filter expression' do |expression|
+  add_filter Filter::category(expression)
 end
 
-@opts.on '-e EXPRESSION', '--exception EXPRESSION', 'Sets the exception filter regexp' do |expression|
-  @filter_params[:exception] = expression
+@opts.on '-l EXPRESSION', '--level EXPRESSION', 'Set the level filter expression' do |expression|
+  add_filter Filter::level(expression)
 end
 
-@opts.on '--no-stacktrace', 'Omits the stacktrace when showing log entries' do
-  @params[:stacktrace] = false
+@opts.on '-m EXPRESSION', '--message EXPRESSION', 'Set the message filter expression' do |expression|
+  add_filter Filter::message(expression)
+end
+
+@opts.on '-e EXPRESSION', '--exception EXPRESSION', 'Sets the exception filter expression' do |expression|
+  add_filter Filter::exception(expression)
 end
 
 @opts.on '--only-exceptions', 'Filter only exception entries' do
-  @only_exceptions = true
+  add_filter Filter::exceptions
 end
 
-@opts.on '--show-log', 'Shows the filtered entries' do
-  @print_log = true
+@opts.on '--and', 'Sets the next filter to use the AND operator' do
+  @operation = :and
 end
 
-@opts.on '--show-info', 'Shows information about the filtered entries' do
-  @print_info = true
+@opts.on '--or', 'Sets the next filter to use the OR operation' do
+  @operation = :or
 end
 
-@opts.on '--show-exception', 'Shows filtered entries that contains an exception' do
-  @print_exception_entries = true
-end
-
-@opts.on '--show-exception-info', 'Shows filtered entries that contains an exception' do
-  @print_exception_info = true
+@opts.on '--print', 'Prints the filtered entries' do
+  @listeners << lambda do |entry|
+    puts entry
+  end
 end
 
 @opts.on '-h', '--help', 'Shows the usage help' do
@@ -60,15 +68,10 @@ end
 
 @opts.parse! ARGV
 
-file = ARGV.first
-filter = LogFilter::new
-filter.exceptions if @only_exceptions
-@filter_params.each do |param, expression|
-  filter.send param, expression
+type, file = ARGV
+parser = Sherlog.parser type
+parser.filter @filter
+@listeners.each do |listener|
+  parser.on_new_entry listener
 end
-log = LogFile::new file, filter, @params
-log.read
-log.print_info if @print_info
-log.print_exception_info if @print_exception_info
-log.print_exception_entries if @print_exception_entries
-log.print_entries if @print_log
+parser.parse file
