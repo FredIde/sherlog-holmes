@@ -60,7 +60,7 @@ module Sherlog
 
     def foreach(input, &block)
       if File.exist? input
-        IO.foreach(file) &block
+        IO.foreach input, &block
       else
         input.each_line &block
       end
