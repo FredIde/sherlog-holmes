@@ -35,6 +35,10 @@ end
   add_filter Filter::level(expression)
 end
 
+@opts.on '-o EXPRESSION', '--origin EXPRESSION', 'Sets the origin filter expression' do |expression|
+  add_filter Filter::origin(expression)
+end
+
 @opts.on '-m EXPRESSION', '--message EXPRESSION', 'Set the message filter expression' do |expression|
   add_filter Filter::message(expression)
 end

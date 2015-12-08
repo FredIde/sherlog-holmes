@@ -56,6 +56,12 @@ module Sherlog
       end
     end
 
+    def self.origin(expression)
+      Filter::new do |entry|
+        expression(expression).accept? entry.origin
+      end
+    end
+
     def self.message(expression)
       Filter::new do |entry|
         expression(expression).accept? entry.message
