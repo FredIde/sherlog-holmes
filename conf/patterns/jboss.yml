@@ -1,0 +1,4 @@
+jboss_eap6:
+  entry: (?<time>[0-9,.:]+)\s+(?<level>\w+)\s+\[(?<category>\S+)\]\s\((?<origin>[^)]+)\)?\s?(?<message>.+)
+  exception: (?<exception>\w+(\.\w+)+(Exception|Error))
+  stacktrace: ^(\s+at)|(Caused by\:)
