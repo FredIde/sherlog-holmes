@@ -8,17 +8,24 @@ describe Filter, '#message' do
   end
 
   it 'should filter entries correctly' do
-    filter = Filter::message 'message'
+    filter = Filter::message 'this is a message'
 
     expect(filter.accept? @message_a).to be_truthy
     expect(filter.accept? @message_b).to be_falsey
   end
 
-  it 'should ignore case' do
-    filter = Filter::message 'MessagE'
-
+  it 'should accept wildcards' do
+    filter = Filter::message '*message'
     expect(filter.accept? @message_a).to be_truthy
     expect(filter.accept? @message_b).to be_falsey
+
+    filter = Filter::message 'this is*'
+    expect(filter.accept? @message_a).to be_truthy
+    expect(filter.accept? @message_b).to be_falsey
+
+    filter = Filter::message '*day*'
+    expect(filter.accept? @message_a).to be_falsey
+    expect(filter.accept? @message_b).to be_truthy
   end
 
 end
