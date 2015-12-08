@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe Log do
+describe Result do
 
   describe '#<<' do
 
     before(:each) do
-      @log = Log::new
+      @log = Result::new
     end
 
     it 'should add entries' do

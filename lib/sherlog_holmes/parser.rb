@@ -1,13 +1,28 @@
 module Sherlog
   class Parser
 
-    def initialize
+    def initialize(patterns = {}, filter = nil)
+      @filter = filter
       @patterns = {
           entry: /(?<message>.+)/,
           exception: /^$/,
           stacktrace: /^$/
-      }
-      @filter = filter { |entry| true }
+      }.merge patterns
+      @filter ||= filter { |entry| true }
+      @listeners = []
+    end
+
+    def collect
+      result = Result::new
+      on_new_entry do |entry|
+        result << entry
+      end
+      result
+    end
+
+    def on_new_entry(listener = nil, &block)
+      listener ||= block
+      @listeners << listener
     end
 
     def filter(filter = nil, &block)
@@ -20,17 +35,14 @@ module Sherlog
     end
 
     def parse(input)
-      result = Log::new
       entry = nil
       foreach input do |line|
         if @patterns[:entry] =~ line
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
+          notify entry
           entry = Entry::new entry_data
-          entry.exception =
-              Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
-          if @filter.accept? entry
-            result << entry
-          end
+          entry.exception = Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
+          entry = nil unless @filter.accept? entry
         else
           if entry
             if entry.exception? and @patterns[:stacktrace] =~ line
@@ -41,7 +53,7 @@ module Sherlog
           end
         end
       end
-      result
+      notify entry
     end
 
     private
@@ -51,6 +63,13 @@ module Sherlog
         IO.foreach(file) &block
       else
         input.each_line &block
+      end
+    end
+
+    def notify(entry)
+      return unless entry
+      @listeners.each do |listener|
+        listener.call entry
       end
     end
 

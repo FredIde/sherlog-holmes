@@ -1,5 +1,5 @@
 module Sherlog
-  class Log
+  class Result
 
     def initialize
       @entries = []
