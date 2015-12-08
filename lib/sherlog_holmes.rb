@@ -22,7 +22,11 @@ module Sherlog
     end
   end
 
-  Dir[File.dirname(__FILE__) + '/../conf/patterns/*.yml'].each do |file|
+  Dir['%s/../conf/patterns/*.yml' % File.dirname(__FILE__)].each do |file|
+    load_patterns file
+  end
+
+  Dir['%s/.sherlog/patterns/*.yml' % ENV['HOME']].each do |file|
     load_patterns file
   end
 
