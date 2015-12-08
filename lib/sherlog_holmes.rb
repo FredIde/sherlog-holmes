@@ -29,4 +29,9 @@ module Sherlog
   def self.parser(pattern_id)
     Parser::new PATTERNS[pattern_id.to_sym]
   end
+
+  def self.loaded_patterns
+    PATTERNS
+  end
+
 end

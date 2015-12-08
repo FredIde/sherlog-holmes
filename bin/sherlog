@@ -21,7 +21,7 @@ def add_filter(filter)
   end
 end
 
-@opts.banner = 'Usage: sherlog [options] <type> <logfile>'
+@opts.banner = 'Usage: sherlog [options] <logfile>'
 
 @opts.on '-p FILE', '--patterns FILE', 'Configures the patterns' do |file|
   Sherlog.load_patterns file
@@ -55,6 +55,10 @@ end
   @operation = :or
 end
 
+@opts.on '-t TYPE', '--type TYPE', 'Sets the type of the log (for loading patterns)' do |type|
+  @type = type.to_sym
+end
+
 @opts.on '--print', 'Prints the filtered entries' do
   @listeners << lambda do |entry|
     puts entry.raw_content
@@ -68,8 +72,9 @@ end
 
 @opts.parse! ARGV
 
-type, file = ARGV
-parser = Sherlog.parser type
+file = ARGV.first
+parser = Sherlog.parser @type if @type
+parser ||= Parser::new
 parser.filter @filter
 @listeners.each do |listener|
   parser.on_new_entry listener

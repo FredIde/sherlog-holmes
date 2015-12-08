@@ -4,7 +4,6 @@ module Sherlog
     def initialize(patterns = {}, filter = nil)
       @filter = filter
       @patterns = {
-          entry: /(?<message>.+)/,
           exception: /^$/,
           stacktrace: /^$/
       }.merge patterns
@@ -37,6 +36,7 @@ module Sherlog
     def parse(input)
       entry = nil
       foreach input do |line|
+        try_guess_pattern line unless @patterns[:entry]
         if @patterns[:entry] =~ line
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
           notify entry
@@ -73,6 +73,14 @@ module Sherlog
       @listeners.each do |listener|
         listener.call entry
       end
+    end
+
+    def try_guess_pattern(line)
+      key, patterns = Sherlog.loaded_patterns.find do |key, patterns|
+        patterns[:entry].match line
+      end
+      patterns ||= {entry: /(?<message>.+)/}
+      @patterns.merge! patterns
     end
 
   end
