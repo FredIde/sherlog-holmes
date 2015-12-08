@@ -15,9 +15,9 @@ module Sherlog
     patterns = YAML::load_file file
     patterns.each do |id, config|
       PATTERNS[id.to_sym] = {
-          entry: config['entry'],
-          exception: config['exception'],
-          stacktrace: config['stacktrace']
+          entry: Regexp::new(config['entry']),
+          exception: Regexp::new(config['exception']),
+          stacktrace: Regexp::new(config['stacktrace'])
       }
     end
   end
