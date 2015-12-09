@@ -63,4 +63,11 @@ describe Filter do
     end
   end
 
+  describe '#not' do
+    it 'should inverse the filter operation' do
+      expect(@true.negate.accept? nil).to be_falsey
+      expect(@false.negate.accept? nil).to be_truthy
+    end
+  end
+
 end

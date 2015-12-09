@@ -50,6 +50,12 @@ module Sherlog
       end
     end
 
+    def negate
+      Filter::new do |entry|
+        !self.accept?(entry)
+      end
+    end
+
     def self.expression(expression)
       Filter::new do |object|
         wildcard_at_start = expression.start_with? '*'
