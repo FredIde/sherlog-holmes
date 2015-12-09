@@ -3,6 +3,8 @@
 ## v0.3.0
 
 - Option to hide stacktrace while printing entries
+- Option to set the encode
+- Option to negate a filter
 
 ## v0.2.0
 
