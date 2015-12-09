@@ -74,6 +74,8 @@ Caused by: java.lang.NullPointerException
 END
     end
 
+    let(:info_with_date) { '2015-12-01 18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1' }
+
     before(:each) do
       @filter = double Filter
       allow(@filter).to receive(:accept?).and_return(true)
@@ -85,10 +87,39 @@ END
 
     it 'should parse the lines correctly' do
       @parser.parse [info_line, info_multiline, error_stacktrace].join($/)
-      expect(@result.entries[0].level).to eq('INFO')
-      expect(@result.entries[1].level).to eq('INFO')
-      expect(@result.entries[2].level).to eq('ERROR')
-      expect(@result.entries[2].exception?).to be_truthy
+
+      entry = @result.entries[0]
+      expect(entry.time).to eq('18:50:42,129')
+      expect(entry.level).to eq('INFO')
+      expect(entry.category).to eq('org.jboss.modules')
+      expect(entry.origin).to eq('main')
+      expect(entry.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
+
+      entry = @result.entries[1]
+      expect(entry.time).to eq('18:51:04,222')
+      expect(entry.level).to eq('INFO')
+      expect(entry.category).to eq('org.jboss.ws.cxf.metadata')
+      expect(entry.origin).to eq('MSC service thread 1-2')
+      expect(entry.message).to eq(<<END.chomp)
+JBWS024061: Adding service endpoint metadata: id=tools.devnull.logspitter.LogSpitterService
+ address=http://localhost:8080/logspitter/LogSpitterService
+ implementor=tools.devnull.logspitter.LogSpitterService
+ serviceName={http://logspitter.devnull.tools/}LogSpitterServiceService
+ portName={http://logspitter.devnull.tools/}LogSpitterServicePort
+ annotationWsdlLocation=null
+ wsdlLocationOverride=null
+ mtomEnabled=false
+ publishedEndpointUrl=http://localhost:8080/logspitter/LogSpitterService
+ invoker=org.jboss.wsf.stack.cxf.JBossWSInvoker
+ properties=[org.jboss.as.webservices.metadata.modelComponentViewName -> service jboss.deployment.unit."logspitter.war".component."tools.devnull.logspitter.LogSpitterService".VIEW."tools.devnull.logspitter.LogSpitterService"]
+END
+
+      entry = @result.entries[2]
+      expect(entry.time).to eq('18:53:20,034')
+      expect(entry.level).to eq('ERROR')
+      expect(entry.category).to eq('tools.devnull.logspitter')
+      expect(entry.origin).to eq('default-workqueue-1')
+      expect(entry.message).to eq('Something wrong happened: java.lang.NullPointerException: Something wrong happened')
     end
 
     it 'should parse exceptions correctly' do
@@ -101,6 +132,44 @@ END
       @parser.parse error_stacktrace
       entry = @result.exceptions.first
       expect(entry.stacktrace.size).to eq(26)
+      expect(entry.stacktrace.join $/).to eq(<<END.chomp)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [rt.jar:1.8.0_60]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [rt.jar:1.8.0_60]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [rt.jar:1.8.0_60]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422) [rt.jar:1.8.0_60]
+	at tools.devnull.logspitter.impl.JavassistExceptionCreator.createException(JavassistExceptionCreator.java:82) [classes:]
+	at tools.devnull.logspitter.impl.JavassistExceptionCreator.create(JavassistExceptionCreator.java:58) [classes:]
+	at tools.devnull.logspitter.impl.SpitterMessageConfigImpl.thrownBy(SpitterMessageConfigImpl.java:56) [classes:]
+	at tools.devnull.logspitter.LogSpitterService.spit(LogSpitterService.java:81) [classes:]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_60]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_60]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_60]
+	at java.lang.reflect.Method.invoke(Method.java:497) [rt.jar:1.8.0_60]
+Caused by: java.lang.NullPointerException
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) [rt.jar:1.8.0_60]
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62) [rt.jar:1.8.0_60]
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) [rt.jar:1.8.0_60]
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:422) [rt.jar:1.8.0_60]
+	at tools.devnull.logspitter.impl.JavassistExceptionCreator.createException(JavassistExceptionCreator.java:82) [classes:]
+	at tools.devnull.logspitter.impl.JavassistExceptionCreator.create(JavassistExceptionCreator.java:58) [classes:]
+	at tools.devnull.logspitter.impl.SpitterMessageConfigImpl.thrownBy(SpitterMessageConfigImpl.java:56) [classes:]
+	at tools.devnull.logspitter.LogSpitterService.spit(LogSpitterService.java:81) [classes:]
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) [rt.jar:1.8.0_60]
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) [rt.jar:1.8.0_60]
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) [rt.jar:1.8.0_60]
+	at java.lang.reflect.Method.invoke(Method.java:497) [rt.jar:1.8.0_60]
+	... 152 more
+END
+    end
+
+    it 'should accept the date if present' do
+      @parser.parse info_with_date
+      entry = @result.entries.first
+      expect(entry.time).to eq('2015-12-01 18:50:42,129')
+      expect(entry.level).to eq('INFO')
+      expect(entry.category).to eq('org.jboss.modules')
+      expect(entry.origin).to eq('main')
+      expect(entry.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
     end
 
   end
