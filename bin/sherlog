@@ -35,11 +35,13 @@ include Sherlog
 @listeners = {}
 
 def add_filter(filter)
+  filter = filter.negate if @negate
   if @filter
     @filter = @filter.send @operation, filter
   else
     @filter = filter
   end
+  @negate = false
 end
 
 @opts.banner = 'Usage: sherlog [options] <logfile>'
@@ -82,6 +84,10 @@ end
 
 @opts.on '--or', 'Sets the next filter to use the OR operation' do
   @operation = :or
+end
+
+@opts.on '--not', 'Negates the next filter' do
+  @negate = true
 end
 
 @opts.on '-t TYPE', '--type TYPE', 'Sets the type of the log (for loading patterns)' do |type|
