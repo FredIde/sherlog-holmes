@@ -107,7 +107,7 @@ This will manually set the patterns definitions. If you don't specify this optio
 
 `--print`
 
-This will instruct Sherlog to print every filtered entries. This is useful to reduce that crazy log file into a sane one.
+This will instruct Sherlog to print every filtered entry. This is useful to reduce that crazy log file into a sane one.
 
     $ sherlog --level ERROR --print crazy-log-file.log > sane-log-file.log
 
