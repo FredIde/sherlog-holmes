@@ -59,6 +59,10 @@ Shelog Holmes provides the command line tool `sherlog`. You can use this to pass
 
 Additionally to having definitions in your `$HOME/.sherlog` directory, you can pass a definition file from anywhere in your machine and Sherlog will scan and register the definitions.
 
+`--encode ENCODE`
+
+This sets the encode to use while reading the log file.
+
 `-c, --category EXPRESSION`
 
 This will filter entries using the category field. You can use the wildcard `*` here.
