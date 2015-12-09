@@ -32,13 +32,13 @@ Sherlog works by grabbing every line of a log and parsing it into a simple struc
 - Exception
 - Stacktrace
 
-You need to supply a regular expression that maps that fields to match your log entry. Here is an example:
+You need to supply a regular expression that maps those fields in order to match your log entry. Here is an example:
 
 ```regexp
 (<?level>\w+)\s(<?category>\s+)\s(<?message>.+)
 ```
 
-Notice that you don't need to define every field, just the ones you need to filter.
+Notice that you don't need to define every field, just the ones shown in your log.
 
 Patterns for exception and stacktrace should be defined separately. The exception pattern is used only in the message field. Here is a complete example of a pattern configuration:
 
@@ -110,6 +110,12 @@ This will manually set the patterns definitions. If you don't specify this optio
 This will instruct Sherlog to print every filtered entry. This is useful to reduce that crazy log file into a sane one.
 
     $ sherlog --level ERROR --print crazy-log-file.log > sane-log-file.log
+
+## Built-in Patterns
+
+Currently, Sherlog has the following patterns:
+
+- `jboss`: matches Wildfly | EAP logs
 
 ## License
 
