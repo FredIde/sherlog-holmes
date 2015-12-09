@@ -20,45 +20,36 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'yummi'
-require 'yaml'
+require 'spec_helper'
 
-require_relative 'sherlog_holmes/version'
-require_relative 'sherlog_holmes/result'
-require_relative 'sherlog_holmes/entry'
-require_relative 'sherlog_holmes/filter'
-require_relative 'sherlog_holmes/parser'
-require_relative 'sherlog_holmes/listeners/print_listener'
+describe PrintListener do
 
-module Sherlog
+  let(:entry) {<<END.chomp}
+ENTRY: This is a message with an EXCEPTION: Foo
+  STACKTRACE: at bla
+  STACKTRACE: at bar
+  STACKTRACE: at run
+END
 
-  PATTERNS = {}
-
-  def self.load_patterns(file)
-    patterns = YAML::load_file file
-    patterns.each do |id, config|
-      PATTERNS[id.to_sym] = {
-          entry: Regexp::new(config['entry']),
-          exception: Regexp::new(config['exception']),
-          stacktrace: Regexp::new(config['stacktrace'])
-      }
-    end
+  before(:each) do
+    @parser = Parser::new
+    @parser.patterns entry: /ENTRY:\s(?<message>.+)/,
+                     exception: /EXCEPTION:\s(?<exception>\w+)/,
+                     stacktrace: /^\s+STACKTRACE/
+    @output = ''
+    @listener = PrintListener::new @output
+    @parser.on_new_entry @listener
   end
 
-  Dir['%s/../conf/patterns/*.yml' % File.dirname(__FILE__)].each do |file|
-    load_patterns file
+  it 'should print parsed entry' do
+    @parser.parse entry
+    expect(@output.chomp).to eq(entry)
   end
 
-  Dir['%s/.sherlog/patterns/*.yml' % ENV['HOME']].each do |file|
-    load_patterns file
-  end
-
-  def self.parser(pattern_id)
-    Parser::new PATTERNS[pattern_id.to_sym]
-  end
-
-  def self.loaded_patterns
-    PATTERNS
+  it 'should omit stacktrace if configured' do
+    @listener.hide_stacktrace
+    @parser.parse entry
+    expect(@output.chomp).to eq('ENTRY: This is a message with an EXCEPTION: Foo')
   end
 
 end

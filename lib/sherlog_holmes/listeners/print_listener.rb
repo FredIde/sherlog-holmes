@@ -20,45 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'yummi'
-require 'yaml'
-
-require_relative 'sherlog_holmes/version'
-require_relative 'sherlog_holmes/result'
-require_relative 'sherlog_holmes/entry'
-require_relative 'sherlog_holmes/filter'
-require_relative 'sherlog_holmes/parser'
-require_relative 'sherlog_holmes/listeners/print_listener'
-
 module Sherlog
 
-  PATTERNS = {}
+  class PrintListener
 
-  def self.load_patterns(file)
-    patterns = YAML::load_file file
-    patterns.each do |id, config|
-      PATTERNS[id.to_sym] = {
-          entry: Regexp::new(config['entry']),
-          exception: Regexp::new(config['exception']),
-          stacktrace: Regexp::new(config['stacktrace'])
-      }
+    def initialize(target = $stdout)
+      @target = target
     end
-  end
 
-  Dir['%s/../conf/patterns/*.yml' % File.dirname(__FILE__)].each do |file|
-    load_patterns file
-  end
+    def hide_stacktrace
+      @hide_stacktrace = true
+    end
 
-  Dir['%s/.sherlog/patterns/*.yml' % ENV['HOME']].each do |file|
-    load_patterns file
-  end
+    def call(entry)
+      if @hide_stacktrace and not entry.stacktrace.empty?
+        content = entry.raw_content
+        message_end = content.index(entry.stacktrace.first)
+        @target << content[0...message_end].chomp << $/
+      else
+        @target << entry.raw_content.chomp << $/
+      end
+    end
 
-  def self.parser(pattern_id)
-    Parser::new PATTERNS[pattern_id.to_sym]
-  end
-
-  def self.loaded_patterns
-    PATTERNS
   end
 
 end

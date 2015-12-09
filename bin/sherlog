@@ -32,7 +32,7 @@ include Sherlog
 @stacktrace = true
 @filter = nil
 @operation = :and
-@listeners = []
+@listeners = {}
 
 def add_filter(filter)
   if @filter
@@ -85,9 +85,11 @@ end
 end
 
 @opts.on '--print', 'Prints the filtered entries' do
-  @listeners << lambda do |entry|
-    puts entry.raw_content
-  end
+  @listeners[:print] = PrintListener::new
+end
+
+@opts.on '--no-stacktrace', 'Do not print stacktraces (use with --print)' do
+  @no_stacktrace = true
 end
 
 @opts.on '-h', '--help', 'Shows the usage help' do
@@ -97,11 +99,13 @@ end
 
 @opts.parse! ARGV
 
+@listeners[:print].hide_stacktrace if @no_stacktrace and @listeners[:print]
+
 file = ARGV.first
 parser = Sherlog.parser @type if @type
 parser ||= Parser::new
 parser.filter @filter
-@listeners.each do |listener|
+@listeners.values.each do |listener|
   parser.on_new_entry listener
 end
 begin
