@@ -101,6 +101,16 @@ This is equivalent to:
 
 *NOTICE: you cannot do some fuzzy logics with these operations because there are no options to define the precedence*
 
+`-t, --type TYPE`
+
+This will manually set the patterns definitions. If you don't specify this option, Sherlog will try the mapped ones with the first input line.
+
+`--print`
+
+This will instruct Sherlog to print every filtered entries. This is useful to reduce a that crazy log file into a sane one.
+
+    $ sherlog --level ERROR --print crazy-log-file.log > sane-log-file.log
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
