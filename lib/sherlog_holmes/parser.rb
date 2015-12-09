@@ -84,7 +84,7 @@ module Sherlog
 
     def foreach(input, &block)
       if File.exist? input
-        IO.foreach input, &block
+        IO.foreach input, encoding: ENV['SHERLOG_FILE_ENCODE'], &block
       else
         input.each_line &block
       end

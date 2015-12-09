@@ -62,3 +62,5 @@ module Sherlog
   end
 
 end
+
+ENV['SHERLOG_FILE_ENCODE'] ||= Encoding.default_external.name

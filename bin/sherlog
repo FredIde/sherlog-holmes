@@ -48,6 +48,10 @@ end
   Sherlog.load_patterns file
 end
 
+@opts.on '--encode ENCODE', 'Sets the encode to read the log' do |encode|
+  ENV['SHERLOG_FILE_ENCODE'] = encode
+end
+
 @opts.on '-c EXPRESSION', '--category EXPRESSION', 'Set the category filter expression' do |expression|
   add_filter Filter::category(expression)
 end
