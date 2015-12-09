@@ -55,6 +55,8 @@ The configuration should contain a unique id and at least a pattern for the log 
 
 Shelog Holmes provides the command line tool `sherlog`. You can use this to pass a log, the filters you need to apply and the process that needs to be executed (like showing the filtered entries or counting the exceptions):
 
+### Config Options
+
 `-p, --patterns FILE`
 
 Additionally to having definitions in your `$HOME/.sherlog` directory, you can pass a definition file from anywhere in your machine and Sherlog will scan and register the definitions.
@@ -62,6 +64,12 @@ Additionally to having definitions in your `$HOME/.sherlog` directory, you can p
 `--encode ENCODE`
 
 This sets the encode to use while reading the log file.
+
+`-t, --type TYPE`
+
+This will manually set the patterns definitions. If you don't specify this option, Sherlog will try the mapped ones with the first input line.
+
+### Filter Options
 
 `-c, --category EXPRESSION`
 
@@ -89,6 +97,8 @@ This will filter entries using the exception field. You can use the wildcard `*`
 
 This will filter entries with exceptions, regardless the kind.
 
+### Logical Options
+
 `--and`
 
 This will use the **AND** operation to connect the next filter. This is the default operation.
@@ -97,17 +107,19 @@ This will use the **AND** operation to connect the next filter. This is the defa
 
 This will use the **OR** operation to connect the next filter.
 
-    sherlog --level WARN --or --level ERROR --and --any-exception
+`--not`
+
+This will negate the next filter.
+
+    sherlog --level WARN --or --not --level INFO --and --any-exception
 
 This is equivalent to:
 
-    (WARN || ERROR) && EXCEPTION
+    (WARN || ! INFO) && EXCEPTION
 
-*NOTICE: you cannot do some fuzzy logics with these operations because there are no options to define the precedence*
+*NOTICE: try not to do fuzzy logics with this operators*
 
-`-t, --type TYPE`
-
-This will manually set the patterns definitions. If you don't specify this option, Sherlog will try the mapped ones with the first input line.
+### Operation Options
 
 `--print`
 
