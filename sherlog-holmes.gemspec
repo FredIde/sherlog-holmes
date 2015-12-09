@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Ataxexe']
   spec.email         = ['ataxexe@devnull.tools']
 
-  spec.summary       = %q{A gem to analyse log files}
+  spec.summary       = %q{The best companion for a log detective!}
   spec.homepage      = 'https://github.com/devnull-tools/sherlog-holmes'
   spec.license       = 'MIT'
 
