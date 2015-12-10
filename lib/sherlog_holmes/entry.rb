@@ -23,7 +23,7 @@
 module Sherlog
   class Entry
 
-    attr_accessor :time, :level, :category, :origin, :message, :exception, :stacktrace, :raw_content
+    attr_accessor :time, :level, :category, :origin, :message, :exceptions, :stacktrace, :raw_content
 
     def initialize(params = {})
       @time = params[:time]
@@ -31,12 +31,18 @@ module Sherlog
       @category = params[:category]
       @origin = params[:origin]
       @message = params[:message]
-      @exception = params[:exception]
+      @exceptions = [params[:exception]] if params[:exception]
+      @exceptions ||= params[:exceptions]
+      @exceptions ||= []
       @stacktrace = []
     end
 
     def exception?
-      !@exception.nil?
+      !@exceptions.empty?
+    end
+
+    def exception
+      @exceptions.first
     end
 
     def <<(line)

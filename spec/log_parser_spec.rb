@@ -46,6 +46,22 @@ ENTRY: This is a log entry with an EXCEPTION: UnbelievableException
 END
     end
 
+    let(:exception_in_multiline) do
+      <<END.chomp
+ENTRY: This is a log entry with
+  an EXCEPTION: UnbelievableException
+END
+    end
+
+    let(:exceptions_and_stacktrace) do
+      <<END.chomp
+ENTRY: This is a log entry with an EXCEPTION: UnbelievableException
+  STACKTRACE: caused by EXCEPTION: OMGException
+  STACKTRACE: and has a stacktrace
+  STACKTRACE: with multiple lines
+END
+    end
+
     let(:no_exception_and_stacktrace) do
       <<END.chomp
 ENTRY: This is a log entry
@@ -108,6 +124,20 @@ END
       @parser.parse input
       expect(@result.exceptions.size).to eq(1)
       expect(@result.entries[3].exception?).to be_falsey
+    end
+
+    it 'should parse exceptions in stacktrace' do
+      @parser.parse exceptions_and_stacktrace
+
+      expect(@result.exceptions.size).to eq(1) # there is one entry that is an exception entry
+      expect(@result.entries.first.exceptions.size).to eq(2) # that entry has 2 exceptions
+    end
+
+    it 'should parse exceptions in multiline messages' do
+      @parser.parse exception_in_multiline
+
+      expect(@result.exceptions.first.exception?).to be_truthy
+      expect(@result.exceptions.first.exception).to eq('UnbelievableException')
     end
 
     it 'should try to guess the pattern if none is given' do

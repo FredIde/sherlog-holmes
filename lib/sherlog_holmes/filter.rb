@@ -98,7 +98,9 @@ module Sherlog
 
     def self.exception(expression)
       Filter::new do |entry|
-        expression(expression).accept? entry.exception
+        entry.exceptions.find do |exception|
+          expression(expression).accept? exception
+        end
       end
     end
 

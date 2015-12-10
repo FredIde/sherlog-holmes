@@ -64,7 +64,7 @@ module Sherlog
           notify entry
           entry = Entry::new entry_data
           entry.raw_content = line.chomp
-          entry.exception = Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
+          entry.exceptions << Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
           entry = nil unless @filter.accept? entry
         else
           if entry
@@ -73,6 +73,7 @@ module Sherlog
             else
               entry << line.chomp
             end
+            entry.exceptions << Regexp.last_match[:exception] if @patterns[:exception] =~ line
             entry.raw_content << $/ << line.chomp
           end
         end
