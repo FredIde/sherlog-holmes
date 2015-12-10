@@ -46,6 +46,8 @@ end
 
 @opts.banner = 'Usage: sherlog [options] <logfile>'
 
+@opts.separator "\n  Config Options\n".bold.white
+
 @opts.on '-p FILE', '--patterns FILE', 'Configures the patterns' do |file|
   Sherlog.load_patterns file
 end
@@ -53,6 +55,12 @@ end
 @opts.on '--encode ENCODE', 'Sets the encode to read the log' do |encode|
   ENV['SHERLOG_FILE_ENCODE'] = encode
 end
+
+@opts.on '-t TYPE', '--type TYPE', 'Sets the type of the log (for loading patterns)' do |type|
+  @type = type.to_sym
+end
+
+@opts.separator "\n  Filter Options\n".bold.white
 
 @opts.on '-c EXPRESSION', '--category EXPRESSION', 'Set the category filter expression' do |expression|
   add_filter Filter::category(expression)
@@ -78,6 +86,8 @@ end
   add_filter Filter::exceptions
 end
 
+@opts.separator "\n  Logical Options\n".bold.white
+
 @opts.on '--and', 'Sets the next filter to use the AND operator' do
   @operation = :and
 end
@@ -90,9 +100,7 @@ end
   @negate = true
 end
 
-@opts.on '-t TYPE', '--type TYPE', 'Sets the type of the log (for loading patterns)' do |type|
-  @type = type.to_sym
-end
+@opts.separator "\n  Operation Options\n".bold.white
 
 @opts.on '--print', 'Prints the filtered entries' do
   @listeners[:print] = PrintListener::new
