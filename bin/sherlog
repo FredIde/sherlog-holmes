@@ -33,6 +33,7 @@ include Sherlog
 @filter = nil
 @operation = :and
 @listeners = {}
+@groups = []
 
 def add_filter(filter)
   filter = filter.negate if @negate
@@ -42,6 +43,19 @@ def add_filter(filter)
     @filter = filter
   end
   @negate = false
+end
+
+def print_table(name, data)
+  table = Yummi::Table::new
+  table.title = name.to_s.capitalize
+  table.header = %w{Name Count}
+  table.colorize :name, with: 'bold.white'
+  table.colorize :count, with: 'magenta'
+  data.each do |name, count|
+    table << [name, count]
+  end
+  table.print
+  puts
 end
 
 @opts.banner = 'Usage: sherlog [options] <logfile>'
@@ -110,6 +124,20 @@ end
   @no_stacktrace = true
 end
 
+@opts.on '--count GROUPS...',
+         'Counts entries and print the result by group (levels, categories, origins, exceptions or all)',
+         Array do |groups|
+  all_groups = [:levels, :categories, :origins, :exceptions]
+  @groups = if groups == ['all']
+              all_groups
+            else
+              all_groups.find_all do |name|
+                groups.index name.to_s
+              end
+            end
+  @listeners[:count] = CountListener::new
+end
+
 @opts.on '-h', '--help', 'Shows the usage help' do
   puts @opts
   exit
@@ -133,6 +161,9 @@ begin
     ARGF.each_line do |line|
       parser.parse line.chomp
     end
+  end
+  @groups.each do |group|
+    print_table group, @listeners[:count].send(group).sort_by { |name, count| -count }
   end
 rescue Interrupt
   exit

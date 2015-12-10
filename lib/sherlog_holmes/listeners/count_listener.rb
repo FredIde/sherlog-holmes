@@ -20,48 +20,43 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-require 'yummi'
-require 'yaml'
-
-require_relative 'sherlog_holmes/version'
-require_relative 'sherlog_holmes/result'
-require_relative 'sherlog_holmes/entry'
-require_relative 'sherlog_holmes/filter'
-require_relative 'sherlog_holmes/parser'
-require_relative 'sherlog_holmes/listeners/print_listener'
-require_relative 'sherlog_holmes/listeners/count_listener'
-
 module Sherlog
 
-  PATTERNS = {}
+  class CountListener
+    attr_reader :levels, :categories, :origins, :exceptions
 
-  def self.load_patterns(file)
-    patterns = YAML::load_file file
-    patterns.each do |id, config|
-      PATTERNS[id.to_sym] = {
-          entry: Regexp::new(config['entry']),
-          exception: Regexp::new(config['exception']),
-          stacktrace: Regexp::new(config['stacktrace'])
-      }
+    def initialize
+      @levels = {}
+      @categories = {}
+      @origins = {}
+      @exceptions = {}
     end
-  end
 
-  Dir['%s/../conf/patterns/*.yml' % File.dirname(__FILE__)].each do |file|
-    load_patterns file
-  end
+    def call(entry)
+      initialize_counters entry
+      count entry
+    end
 
-  Dir['%s/.sherlog/patterns/*.yml' % ENV['HOME']].each do |file|
-    load_patterns file
-  end
+    private
 
-  def self.parser(pattern_id)
-    Parser::new PATTERNS[pattern_id.to_sym]
-  end
+    def initialize_counters(entry)
+      @levels[entry.level] ||= 0 if entry.level
+      @categories[entry.category] ||= 0 if entry.category
+      @origins[entry.origin] ||= 0 if entry.origin
+      entry.exceptions.each do |exception|
+        @exceptions[exception] ||= 0
+      end
+    end
 
-  def self.loaded_patterns
-    PATTERNS
+    def count(entry)
+      @levels[entry.level] += 1 if entry.level
+      @categories[entry.category] += 1 if entry.category
+      @origins[entry.origin] += 1 if entry.origin
+      entry.exceptions.each do |exception|
+        @exceptions[exception] += 1
+      end
+    end
+
   end
 
 end
-
-ENV['SHERLOG_FILE_ENCODE'] ||= Encoding.default_external.name

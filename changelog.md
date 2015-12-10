@@ -2,6 +2,7 @@
 
 ## v0.3.0
 
+- Operation to count entries
 - Entries can now have multiple exceptions (but the first one will be returned by `#exception`)
 - Option to hide stacktrace while printing entries
 - Option to set the encode

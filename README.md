@@ -111,7 +111,9 @@ This will use the **OR** operation to connect the next filter.
 
 This will negate the next filter.
 
-    sherlog --level WARN --or --not --level INFO --and --any-exception
+```
+sherlog --level WARN --or --not --level INFO --and --any-exception
+```
 
 This is equivalent to:
 
@@ -125,7 +127,27 @@ This is equivalent to:
 
 This will instruct Sherlog to print every filtered entry. This is useful to reduce that crazy log file into a sane one.
 
-    $ sherlog --level ERROR --print crazy-log-file.log > sane-log-file.log
+```
+$ sherlog --level ERROR --print crazy-log-file.log > sane-log-file.log
+```
+
+`--no-stacktrace`
+
+This will instruct Sherlog to not print stacktraces for entries. This only has effect if used with `--print`.
+
+`--count GROUPS...`
+
+Set this and Sherlog will count the number of entries per level, category, origin or exception. The possible parameters are (separated by a `,`):
+
+- `levels`: counts the number of entries per level
+- `categories`: counts the number of entries per category
+- `origins`: counts the number of entries per origin
+- `exception`: counts the number of entries per exception
+- `all`: counts all groups
+
+```
+$ sherlog --count levels,categories log-file.log
+```
 
 ## Built-in Patterns
 
