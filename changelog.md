@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+- Fix JBoss date pattern
+
 ## v0.3.0
 
 - Operation to count entries

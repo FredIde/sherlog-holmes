@@ -74,7 +74,7 @@ Caused by: java.lang.NullPointerException
 END
     end
 
-    let(:info_with_date) { '2015-12-01 18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1' }
+    let(:info_with_date) { '01-12-2015 18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1' }
 
     before(:each) do
       @filter = double Filter
@@ -165,7 +165,7 @@ END
     it 'should accept the date if present' do
       @parser.parse info_with_date
       entry = @result.entries.first
-      expect(entry.time).to eq('2015-12-01 18:50:42,129')
+      expect(entry.time).to eq('01-12-2015 18:50:42,129')
       expect(entry.level).to eq('INFO')
       expect(entry.category).to eq('org.jboss.modules')
       expect(entry.origin).to eq('main')
