@@ -28,7 +28,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.4.0, RVM: ruby-2.2-head) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.4.1, RVM: ruby-2.2-head) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="term-ansicolor (v1.3.2, RVM: ruby-2.2-head) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="tins (v1.6.0, RVM: ruby-2.2-head) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tins (v1.8.1, RVM: ruby-2.2-head) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="yummi (v0.9.5, RVM: ruby-2.2-head) [gem]" level="application" />
   </component>
 </module>
