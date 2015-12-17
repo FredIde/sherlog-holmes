@@ -2,7 +2,7 @@
 
 ## v0.3.3
 
-- Apply filters before the entire entry has parsed
+- Apply filters before the entire entry was parsed
 
 ## v0.3.2
 
