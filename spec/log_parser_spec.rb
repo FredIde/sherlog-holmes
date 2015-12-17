@@ -148,6 +148,17 @@ END
       expect(result.entries.first.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
     end
 
+    it 'should apply filters after the entire entry was built' do
+      @parser.filter Filter::exception('UnbelievableException')
+      @parser.parse <<END.chomp
+ENTRY: This is a log entry with an EXCEPTION: OMGException
+  STACKTRACE: caused by EXCEPTION: UnbelievableException
+  STACKTRACE: and has a stacktrace
+  STACKTRACE: with multiple lines
+END
+      expect(@result.entries.first.exception?).to be_truthy
+    end
+
   end
 
 end

@@ -61,11 +61,11 @@ module Sherlog
         try_guess_pattern line unless @patterns[:entry]
         if @patterns[:entry] =~ line
           entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k]] }]
-          notify entry
+          # notify the last entry parsed
+          notify entry if entry and @filter.accept? entry
           entry = Entry::new entry_data
           entry.raw_content = line.chomp
           entry.exceptions << Regexp.last_match[:exception] if @patterns[:exception] =~ entry.message
-          entry = nil unless @filter.accept? entry
         else
           if entry
             if entry.exception? and @patterns[:stacktrace] =~ line
@@ -78,7 +78,8 @@ module Sherlog
           end
         end
       end
-      notify entry
+      # notify the last entry parsed
+      notify entry if entry and @filter.accept? entry
     end
 
     private

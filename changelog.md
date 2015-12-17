@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.3
+
+- Apply filters before the entire entry has parsed
+
 ## v0.3.2
 
 - Recognize 'Fault' in JBoss exception pattern
