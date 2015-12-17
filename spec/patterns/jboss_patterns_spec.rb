@@ -76,6 +76,10 @@ END
 
     let(:info_with_date) { '01-12-2015 18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1' }
 
+    def exception(name)
+      '18:50:42,129 ERROR  [org.jboss.modules] (main) %s' % name
+    end
+
     before(:each) do
       @filter = double Filter
       allow(@filter).to receive(:accept?).and_return(true)
@@ -126,6 +130,21 @@ END
       @parser.parse error_stacktrace
       entry = @result.exceptions.first
       expect(entry.exception).to eq('java.lang.NullPointerException')
+    end
+
+    it 'should recognize Fault suffix' do
+      @parser.parse exception('org.apache.cxf.binding.soap.SoapFault')
+      expect(@result.entries.first.exception?).to be_truthy
+    end
+
+    it 'should recognize Exception suffix' do
+      @parser.parse exception('java.lang.NullPointerException')
+      expect(@result.entries.first.exception?).to be_truthy
+    end
+
+    it 'should recognize Error suffix' do
+      @parser.parse exception('java.lang.IllegalArgumentError')
+      expect(@result.entries.first.exception?).to be_truthy
     end
 
     it 'should parse stacktrace correctly' do

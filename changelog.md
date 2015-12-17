@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.2
+
+- Recognize 'Fault' in JBoss exception pattern
+
 ## v0.3.1
 
 - Fix JBoss date pattern
