@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0
+
+- Added support for multiple log files
+
 ## v0.3.3
 
 - Apply filters before the entire entry was parsed

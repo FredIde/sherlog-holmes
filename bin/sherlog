@@ -58,7 +58,7 @@ def print_table(name, data)
   puts
 end
 
-@opts.banner = 'Usage: sherlog [options] <logfile>'
+@opts.banner = 'Usage: sherlog [options] [logfile ...]'
 
 @opts.separator "\n  Config Options\n".bold.white
 
@@ -147,7 +147,6 @@ end
 
 @listeners[:print].hide_stacktrace if @no_stacktrace and @listeners[:print]
 
-file = ARGV.first
 parser = Sherlog.parser @type if @type
 parser ||= Parser::new
 parser.filter @filter
@@ -155,11 +154,13 @@ parser.filter @filter
   parser.on_new_entry listener
 end
 begin
-  if file
-    parser.parse file
-  else
+  if ARGV.empty?
     ARGF.each_line do |line|
       parser.parse line.chomp
+    end
+  else
+    ARGV.each do |file|
+      parser.parse file
     end
   end
   @groups.each do |group|
