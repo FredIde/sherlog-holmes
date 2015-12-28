@@ -44,6 +44,7 @@ describe 'JBoss Fuse Patterns' do
       expect(entry.category).to eq('NamespaceHandlerRegisterer')
       expect(entry.origin).to eq('FelixStartLevel')
       expect(entry.message).to eq('Registered blueprint namespace handler for http://cxf.apache.org/blueprint/simple')
+      expect(entry[:date]).to eq('2015-12-26')
       expect(entry[:bundle]).to eq('74 - org.apache.cxf.cxf-core - 3.0.4.redhat-621084')
       expect(entry[:bundle_id]).to eq('74')
       expect(entry[:bundle_name]).to eq('org.apache.cxf.cxf-core')

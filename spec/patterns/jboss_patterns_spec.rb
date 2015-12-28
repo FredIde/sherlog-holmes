@@ -58,6 +58,7 @@ describe 'JBoss Patterns' do
       expect(entry.category).to eq('org.jboss.modules')
       expect(entry.origin).to eq('main')
       expect(entry.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
+      expect(entry[:date]).to eq('2015-12-01')
     end
 
   end
