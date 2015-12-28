@@ -57,6 +57,7 @@ module Sherlog
     end
 
     def self.expression(expression)
+      expression = expression.to_s
       Filter::new do |object|
         wildcard_at_start = expression.start_with? '*'
         wildcard_at_end = expression.end_with? '*'
@@ -107,6 +108,12 @@ module Sherlog
     def self.exceptions
       Filter::new do |entry|
         entry.exception?
+      end
+    end
+
+    def self.custom_attribute(attribute_name, expression)
+      Filter::new do |entry|
+        expression(expression).accept? entry[attribute_name]
       end
     end
 

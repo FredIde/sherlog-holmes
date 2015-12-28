@@ -3,6 +3,7 @@
 ## v0.4.0
 
 - Added support for multiple log files
+- Added support for custom attributes using capture groups
 
 ## v0.3.3
 

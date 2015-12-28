@@ -96,6 +96,14 @@ end
   add_filter Filter::exception(expression)
 end
 
+@opts.on '-f NAME', '--field NAME', 'Sets the custom attribute filter name' do |name|
+  @field = name
+end
+
+@opts.on '-v EXPRESSION', '--value EXPRESSION', 'Sets the custom attribute filter expression' do |expression|
+  add_filter Filter::custom_attribute(@field, expression)
+end
+
 @opts.on '--any-exception', 'Filter exception entries' do
   add_filter Filter::exceptions
 end
