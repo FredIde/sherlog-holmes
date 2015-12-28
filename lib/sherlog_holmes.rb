@@ -38,11 +38,12 @@ module Sherlog
   def self.load_patterns(file)
     patterns = YAML::load_file file
     patterns.each do |id, config|
-      PATTERNS[id.to_sym] = {
-          entry: Regexp::new(config['entry']),
-          exception: Regexp::new(config['exception']),
-          stacktrace: Regexp::new(config['stacktrace'])
-      }
+      pattern_config = {}
+      pattern_config[:entry] = Regexp::new(config['entry']) if config['entry']
+      pattern_config[:exception] = Regexp::new(config['exception']) if config['exception']
+      pattern_config[:stacktrace] = Regexp::new(config['stacktrace']) if config['stacktrace']
+      pattern_config.merge! PATTERNS[config['from'].to_sym] if config['from']
+      PATTERNS[id.to_sym] = pattern_config
     end
   end
 

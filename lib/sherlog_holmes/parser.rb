@@ -101,7 +101,7 @@ module Sherlog
 
     def try_guess_pattern(line)
       key, patterns = Sherlog.loaded_patterns.find do |key, patterns|
-        patterns[:entry].match line
+        patterns[:entry].match line if patterns[:entry]
       end
       @patterns.merge! patterns if patterns
     end

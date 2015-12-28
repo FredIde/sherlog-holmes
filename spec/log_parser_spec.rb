@@ -146,6 +146,12 @@ END
       parser.parse '18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1'
       expect(result.entries.size).to eq(1)
       expect(result.entries.first.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
+
+      parser = Parser::new
+      result = parser.collect
+      parser.parse '14:44:46,220 | INFO  | pool-10-thread-1 | ConfigManager                    | 253 - io.hawt.hawtio-web - 1.4.0.redhat-621084 | Configuration will be discovered via system properties'
+      expect(result.entries.size).to eq(1)
+      expect(result.entries.first.message).to eq('Configuration will be discovered via system properties')
     end
 
     it 'should apply filters after the entire entry was built' do
