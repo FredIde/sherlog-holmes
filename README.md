@@ -51,6 +51,23 @@ jboss:
 
 The configuration should contain a unique id and at least a pattern for the log **entry**. Place you configuration file in a `*.yml` file inside your `$HOME/.sherlog/patterns` directory and you're ready to go!
 
+### Custom Attributes
+
+Sherlog allows you to define custom attributes by using named capture groups. Any capture group name that differs from the main fields will be stored as a custom attribute in the entry object.
+
+### Configuration Inheritance
+
+You can create a base configuration and then override some values to create another one. In this case, you need to specify the parent configuration with the `from` key:
+
+```yaml
+base.java:
+  exception: (?<exception>\w+(\.\w+)+(Exception|Error))
+  stacktrace: ^(\s+at)|(Caused by\:)|(\s+\.{3}\s\d+\smore)
+jboss:
+  from: base.java
+  entry: (?<time>[0-9,.:]+)\s+(?<level>\w+)\s+\[(?<category>\S+)\]\s\((?<origin>[^)]+)\)?\s?(?<message>.+)
+```
+
 ## Usage
 
 Shelog Holmes provides the command line tool `sherlog`. You can use this to pass a log, the filters you need to apply and the process that needs to be executed (like showing the filtered entries or counting the exceptions):
@@ -96,6 +113,14 @@ This will filter entries using the exception field. You can use the wildcard `*`
 `--any-exception`
 
 This will filter entries with exceptions, regardless the kind.
+
+`-f NAME, --field NAME`
+
+This will filter entries using custom attributes found in named capture groups. This parameter specifies the custom attribute name. Use it with `-v | --value` for defining the expression.
+
+`-v EXPRESSION, --value EXPRESSION`
+
+Specifies the expression to use with the last `-f | --field` parameter. The wildcard `*` is accepted here.
 
 ### Logical Options
 
@@ -153,7 +178,9 @@ $ sherlog --count levels,categories log-file.log
 
 Currently, Sherlog has the following patterns:
 
+- `base.java`: base pattern for Java outputs (contains patterns for exceptions and stacktraces only)
 - `jboss`: matches Wildfly | EAP logs
+- `jboss.fuse`: matches JBoss Fuse logs
 
 ## License
 
