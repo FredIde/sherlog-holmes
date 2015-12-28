@@ -103,8 +103,7 @@ module Sherlog
       key, patterns = Sherlog.loaded_patterns.find do |key, patterns|
         patterns[:entry].match line
       end
-      patterns ||= {entry: /(?<message>.+)/}
-      @patterns.merge! patterns
+      @patterns.merge! patterns if patterns
     end
 
   end
