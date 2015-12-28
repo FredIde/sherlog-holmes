@@ -42,7 +42,7 @@ module Sherlog
       pattern_config[:entry] = Regexp::new(config['entry']) if config['entry']
       pattern_config[:exception] = Regexp::new(config['exception']) if config['exception']
       pattern_config[:stacktrace] = Regexp::new(config['stacktrace']) if config['stacktrace']
-      pattern_config.merge! PATTERNS[config['from'].to_sym] if config['from']
+      pattern_config = PATTERNS[config['from'].to_sym].merge pattern_config if config['from']
       PATTERNS[id.to_sym] = pattern_config
     end
   end
