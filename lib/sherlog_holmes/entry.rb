@@ -26,15 +26,18 @@ module Sherlog
     attr_accessor :time, :level, :category, :origin, :message, :exceptions, :stacktrace, :raw_content
 
     def initialize(params = {})
-      @time = params[:time]
-      @level = params[:level]
-      @category = params[:category]
-      @origin = params[:origin]
-      @message = params[:message]
-      @exceptions = [params[:exception]] if params[:exception]
-      @exceptions ||= params[:exceptions]
+      params = params.dup
+      @time = params.delete :time if params[:time]
+      @level = params.delete :level if params[:level]
+      @category = params.delete :category if params[:category]
+      @origin = params.delete :origin if params[:origin]
+      @message = params.delete :message if params[:message]
+      @raw_content = params.delete :raw_content if params[:raw_content]
+      @exceptions = [params.delete(:exception)] if params[:exception]
+      @exceptions ||= params.delete(:exceptions) if params[:exceptions]
       @exceptions ||= []
       @stacktrace = []
+      @custom_attributes = params
     end
 
     def exception?
@@ -47,6 +50,10 @@ module Sherlog
 
     def <<(line)
       @message << $/ << line
+    end
+
+    def [](custom_attribute)
+      @custom_attributes[custom_attribute.to_s] or @custom_attributes[custom_attribute.to_sym]
     end
 
     def to_s

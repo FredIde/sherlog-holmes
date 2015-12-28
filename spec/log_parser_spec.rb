@@ -159,6 +159,12 @@ END
       expect(@result.entries.first.exception?).to be_truthy
     end
 
+    it 'should store custom attributes using capture groups' do
+      @parser.patterns entry: /ENTRY:\s(?<id>\d+)\|(?<message>.+)/
+      @parser.parse 'ENTRY: 12|Message'
+      expect(@result.entries.first[:id]).to eq '12'
+    end
+
   end
 
 end
