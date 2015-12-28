@@ -4,6 +4,8 @@
 
 - Added support for multiple log files
 - Added support for custom attributes using capture groups
+- Added JBoss Fuse pattern
+- Added support for inheritance of patterns
 
 ## v0.3.3
 
