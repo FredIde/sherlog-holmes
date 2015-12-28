@@ -60,7 +60,7 @@ module Sherlog
       foreach input do |line|
         try_guess_pattern line unless @patterns[:entry]
         if @patterns[:entry] =~ line
-          entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k].strip] }]
+          entry_data = Hash[Regexp.last_match.names.map { |k| [k.to_sym, Regexp.last_match[k].to_s.strip] }]
           # notify the last entry parsed
           notify entry if entry and @filter.accept? entry
           entry = Entry::new entry_data
