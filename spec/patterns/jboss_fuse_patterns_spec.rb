@@ -22,42 +22,32 @@
 
 require 'spec_helper'
 
-describe 'JBoss Patterns' do
+describe 'JBoss Fuse Patterns' do
 
   describe '#parse' do
-
-    def exception(name)
-      '18:50:42,129 ERROR  [org.jboss.modules] (main) %s' % name
-    end
 
     before(:each) do
       @filter = double Filter
       allow(@filter).to receive(:accept?).and_return(true)
 
-      @parser = Sherlog::parser :jboss
+      @parser = Sherlog::parser 'jboss.fuse'
       @parser.filter @filter
       @result = @parser.collect
     end
 
     it 'should parse the lines correctly' do
-      @parser.parse '18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1'
+      @parser.parse '2015-12-26 20:54:15,828 | INFO  | FelixStartLevel  | NamespaceHandlerRegisterer       | 74 - org.apache.cxf.cxf-core - 3.0.4.redhat-621084 | Registered blueprint namespace handler for http://cxf.apache.org/blueprint/simple'
 
       entry = @result.entries[0]
-      expect(entry.time).to eq('18:50:42,129')
+      expect(entry.time).to eq('2015-12-26 20:54:15,828')
       expect(entry.level).to eq('INFO')
-      expect(entry.category).to eq('org.jboss.modules')
-      expect(entry.origin).to eq('main')
-      expect(entry.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
-    end
-
-    it 'should accept the date if present' do
-      @parser.parse '2015-12-01 18:50:42,129 INFO  [org.jboss.modules] (main) JBoss Modules version 1.3.6.Final-redhat-1'
-      entry = @result.entries.first
-      expect(entry.time).to eq('2015-12-01 18:50:42,129')
-      expect(entry.level).to eq('INFO')
-      expect(entry.category).to eq('org.jboss.modules')
-      expect(entry.origin).to eq('main')
-      expect(entry.message).to eq('JBoss Modules version 1.3.6.Final-redhat-1')
+      expect(entry.category).to eq('NamespaceHandlerRegisterer')
+      expect(entry.origin).to eq('FelixStartLevel')
+      expect(entry.message).to eq('Registered blueprint namespace handler for http://cxf.apache.org/blueprint/simple')
+      expect(entry[:bundle]).to eq('74 - org.apache.cxf.cxf-core - 3.0.4.redhat-621084')
+      expect(entry[:bundle_id]).to eq('74')
+      expect(entry[:bundle_name]).to eq('org.apache.cxf.cxf-core')
+      expect(entry[:bundle_version]).to eq('3.0.4.redhat-621084')
     end
 
   end
