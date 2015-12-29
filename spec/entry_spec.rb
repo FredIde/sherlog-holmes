@@ -63,11 +63,14 @@ describe Entry do
       expect(entry.raw_content).to eq 'foo'
     end
 
-    it 'should store custom attributes' do
+  end
+
+  describe '#[]' do
+    it 'should access custom attribute with symbols and strings' do
       entry = Entry::new bundle: 'foo'
       expect(entry[:bundle]).to eq 'foo'
+      expect(entry['bundle']).to eq 'foo'
     end
-
   end
 
   describe '#exception' do
