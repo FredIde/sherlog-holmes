@@ -4,6 +4,8 @@
 
 Don't you hate thousands of lines in a log blowing up with your troubleshooting? Lots of useless data that you have to filter just to turn that 300 MB of madness into a 30 KB of useful information. If you need something that can rip off useless entries so you can have a clue about what is going on with that application, you should give Sherlog Holmes a try.
 
+If you are a log detective, Sherlog Holmes is your best companion!
+
 ## Installation
 
 Sherlog can be installed easily through the `gem` command:
