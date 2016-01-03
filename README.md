@@ -14,33 +14,34 @@ gem 'sherlog_holmes'
 
 And then execute:
 
-    $ bundle
+```sh
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install sherlog-holmes
+```sh
+$ gem install sherlog-holmes
+```
 
-## Concepts
+## How it works
 
-Sherlog works by grabbing every line of a log and parsing it into a simple structure containing:
+Sherlog works by grabbing every line of an input and applying a Regular Expression to create an `entry`. This `entry` will be filtered based on a set of given rules and, if it is accepted, will be passed to a set of defined processors so they can do something useful (like printing the output so you can redirect it to a sane log file).
 
-- Time
-- Level
-- Category
-- Origin
-- Message
-- Exception
-- Stacktrace
+The attributes are based on the named capture groups:
 
-You need to supply a regular expression that maps those fields in order to match your log entry. Here is an example:
+- Time: `time`
+- Level: `level`
+- Category: `category`
+- Origin: `origin`
+- Message: `message`
 
 ```regexp
 (<?level>\w+)\s(<?category>\s+)\s(<?message>.+)
 ```
+*Any other capture group will be assigned to a set of custom attributes and can be used later.*
 
-Notice that you don't need to define every field, just the ones shown in your log.
-
-Patterns for exception and stacktrace should be defined separately. The exception pattern is used only in the message field. Here is a complete example of a pattern configuration:
+Patterns for exception and stacktrace should be defined separately. The exception pattern is used only in the message field and stacktraces. Here is a complete example of a pattern configuration:
 
 ```yaml
 jboss:
@@ -50,10 +51,6 @@ jboss:
 ```
 
 The configuration should contain a unique id and at least a pattern for the log **entry**. Place you configuration file in a `*.yml` file inside your `$HOME/.sherlog/patterns` directory and you're ready to go!
-
-### Custom Attributes
-
-Sherlog allows you to define custom attributes by using named capture groups. Any capture group name that differs from the main fields will be stored as a custom attribute in the entry object.
 
 ### Configuration Inheritance
 
@@ -84,7 +81,7 @@ This sets the encode to use while reading the log file.
 
 `-t, --type TYPE`
 
-This will manually set the patterns definitions. If you don't specify this option, Sherlog will try the mapped ones with the first input line.
+This will manually set the patterns definitions. If you don't specify this option, Sherlog will try to guess the pattern by trying the mapped ones until it finds a match.
 
 ### Filter Options
 
@@ -144,7 +141,7 @@ This is equivalent to:
 
     (WARN || ! INFO) && EXCEPTION
 
-*NOTICE: try not to do fuzzy logics with this operators*
+*NOTICE: try not to do fuzzy logics with those operators*
 
 ### Operation Options
 
@@ -167,12 +164,14 @@ Set this and Sherlog will count the number of entries per level, category, origi
 - `levels`: counts the number of entries per level
 - `categories`: counts the number of entries per category
 - `origins`: counts the number of entries per origin
-- `exception`: counts the number of entries per exception
+- `exceptions`: counts the number of entries per exception
 - `all`: counts all groups
 
 ```
 $ sherlog --count levels,categories log-file.log
 ```
+
+*Don't forget to set an operation or `sherlog` will not show anything in your console!*
 
 ## Built-in Patterns
 
@@ -185,4 +184,3 @@ Currently, Sherlog has the following patterns:
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
