@@ -6,7 +6,13 @@ Don't you hate thousands of lines in a log blowing up with your troubleshooting?
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Sherlog can be installed easily through the `gem` command:
+
+```sh
+$ gem install sherlog-holmes
+```
+
+This is the preferable way since Sherlog is basically a console line application. Of course you can add it to your application's Gemfile:
 
 ```ruby
 gem 'sherlog_holmes'
@@ -16,12 +22,6 @@ And then execute:
 
 ```sh
 $ bundle
-```
-
-Or install it yourself as:
-
-```sh
-$ gem install sherlog-holmes
 ```
 
 ## How it works
