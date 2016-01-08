@@ -22,7 +22,7 @@
 # THE SOFTWARE.
 
 require 'yummi'
-require 'optionparser'
+require 'optparse'
 
 require_relative '../lib/sherlog_holmes'
 
