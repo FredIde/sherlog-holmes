@@ -163,10 +163,10 @@ This will instruct Sherlog to not print stacktraces for entries. This only has e
 
 Set this and Sherlog will count the number of entries per level, category, origin or exception. The possible parameters are (separated by a `,`):
 
-- `levels`: counts the number of entries per level
-- `categories`: counts the number of entries per category
-- `origins`: counts the number of entries per origin
-- `exceptions`: counts the number of entries per exception
+- `level`: counts the number of entries per level
+- `category`: counts the number of entries per category
+- `origin`: counts the number of entries per origin
+- `exception`: counts the number of entries per exception
 - `all`: counts all groups
 
 ```

@@ -133,9 +133,9 @@ end
 end
 
 @opts.on '--count GROUPS...',
-         'Counts entries and print the result by group (levels, categories, origins, exceptions or all)',
+         'Counts entries and print the result by group (level, category, origin, exception or all)',
          Array do |groups|
-  all_groups = [:levels, :categories, :origins, :exceptions]
+  all_groups = [:level, :category, :origin, :exception]
   @groups = if groups == ['all']
               all_groups
             else

@@ -23,13 +23,13 @@
 module Sherlog
 
   class CountListener
-    attr_reader :levels, :categories, :origins, :exceptions
+    attr_reader :level, :category, :origin, :exception
 
     def initialize
-      @levels = {}
-      @categories = {}
-      @origins = {}
-      @exceptions = {}
+      @level = {}
+      @category = {}
+      @origin = {}
+      @exception = {}
     end
 
     def call(entry)
@@ -40,20 +40,20 @@ module Sherlog
     private
 
     def initialize_counters(entry)
-      @levels[entry.level] ||= 0 if entry.level
-      @categories[entry.category] ||= 0 if entry.category
-      @origins[entry.origin] ||= 0 if entry.origin
+      @level[entry.level] ||= 0 if entry.level
+      @category[entry.category] ||= 0 if entry.category
+      @origin[entry.origin] ||= 0 if entry.origin
       entry.exceptions.each do |exception|
-        @exceptions[exception] ||= 0
+        @exception[exception] ||= 0
       end
     end
 
     def count(entry)
-      @levels[entry.level] += 1 if entry.level
-      @categories[entry.category] += 1 if entry.category
-      @origins[entry.origin] += 1 if entry.origin
+      @level[entry.level] += 1 if entry.level
+      @category[entry.category] += 1 if entry.category
+      @origin[entry.origin] += 1 if entry.origin
       entry.exceptions.each do |exception|
-        @exceptions[exception] += 1
+        @exception[exception] += 1
       end
     end
 

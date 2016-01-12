@@ -34,9 +34,9 @@ describe CountListener do
     @listener.call Entry::new(level: :error)
     @listener.call Entry::new(level: :debug)
 
-    expect(@listener.levels[:info]).to eq(2)
-    expect(@listener.levels[:error]).to eq(1)
-    expect(@listener.levels[:debug]).to eq(1)
+    expect(@listener.level[:info]).to eq(2)
+    expect(@listener.level[:error]).to eq(1)
+    expect(@listener.level[:debug]).to eq(1)
   end
 
   it 'should count entries by category' do
@@ -45,9 +45,9 @@ describe CountListener do
     @listener.call Entry::new(category: 'devnull.tools')
     @listener.call Entry::new(category: 'other')
 
-    expect(@listener.categories['devnull.tools']).to eq(2)
-    expect(@listener.categories['sherlog holmes']).to eq(1)
-    expect(@listener.categories['other']).to eq(1)
+    expect(@listener.category['devnull.tools']).to eq(2)
+    expect(@listener.category['sherlog holmes']).to eq(1)
+    expect(@listener.category['other']).to eq(1)
   end
 
   it 'should count entries by origin' do
@@ -56,9 +56,9 @@ describe CountListener do
     @listener.call Entry::new(origin: 'worker')
     @listener.call Entry::new(origin: 'other')
 
-    expect(@listener.origins['main']).to eq(2)
-    expect(@listener.origins['worker']).to eq(1)
-    expect(@listener.origins['other']).to eq(1)
+    expect(@listener.origin['main']).to eq(2)
+    expect(@listener.origin['worker']).to eq(1)
+    expect(@listener.origin['other']).to eq(1)
   end
 
   it 'should count entries by exception' do
@@ -67,10 +67,10 @@ describe CountListener do
     @listener.call Entry::new(exception: 'UnbelievableException')
     @listener.call Entry::new(exception: 'OMGException')
 
-    expect(@listener.exceptions['NullPointerException']).to eq(2)
-    expect(@listener.exceptions['IllegalArgumentException']).to eq(1)
-    expect(@listener.exceptions['UnbelievableException']).to eq(1)
-    expect(@listener.exceptions['OMGException']).to eq(1)
+    expect(@listener.exception['NullPointerException']).to eq(2)
+    expect(@listener.exception['IllegalArgumentException']).to eq(1)
+    expect(@listener.exception['UnbelievableException']).to eq(1)
+    expect(@listener.exception['OMGException']).to eq(1)
   end
 
 end

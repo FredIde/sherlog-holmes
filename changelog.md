@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0
+
+- Use singular attributes in group option
+
 ## v0.4.1
 
 - Use `optparse` instead of `optionparser`
