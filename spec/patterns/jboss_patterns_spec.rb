@@ -61,6 +61,17 @@ describe 'JBoss Patterns' do
       expect(entry[:date]).to eq('2015-12-01')
     end
 
+    it 'should accept entries that uses a | between attributes' do
+      @parser.parse '2016-02-03 17:44:15,003 | INFO  | [org.jboss.as] | (MSC service thread 1-8:) | JBAS015899: Iniciando JBoss EAP 6.1.0.GA (AS 7.2.0.Final-redhat-8)'
+      entry = @result.entries.first
+      expect(entry.time).to eq('2016-02-03 17:44:15,003')
+      expect(entry.level).to eq('INFO')
+      expect(entry.category).to eq('org.jboss.as')
+      expect(entry.origin).to eq('MSC service thread 1-8:')
+      expect(entry.message).to eq('JBAS015899: Iniciando JBoss EAP 6.1.0.GA (AS 7.2.0.Final-redhat-8)')
+      expect(entry[:date]).to eq('2016-02-03')
+    end
+
   end
 
 end

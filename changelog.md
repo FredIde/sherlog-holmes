@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.1
+
+- Accept JBoss log entries that uses a '|' between attributes
+
 ## v0.5.0
 
 - Use singular attributes in group option
