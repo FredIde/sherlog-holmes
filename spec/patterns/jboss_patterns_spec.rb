@@ -34,7 +34,7 @@ describe 'JBoss Patterns' do
       @filter = double Filter
       allow(@filter).to receive(:accept?).and_return(true)
 
-      @parser = Sherlog::parser :jboss
+      @parser = Sherlog::parser 'jboss.wildfly'
       @parser.filter @filter
       @result = @parser.collect
     end
