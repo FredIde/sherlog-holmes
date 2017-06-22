@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.2
+
+- Changed jboss pattern to jboss.wildfly (#1)
+
+
 ## v0.5.1
 
 - Accept JBoss log entries that uses a '|' between attributes
