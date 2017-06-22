@@ -1,3 +1,4 @@
+.idea
 /.bundle/
 /.yardoc
 /Gemfile.lock
@@ -7,4 +8,3 @@
 /pkg/
 /spec/reports/
 /tmp/
-.idea/workspace.xml
