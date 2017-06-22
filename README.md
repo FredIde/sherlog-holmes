@@ -170,7 +170,7 @@ Set this and Sherlog will count the number of entries per level, category, origi
 - `all`: counts all groups
 
 ```
-$ sherlog --count levels,categories log-file.log
+$ sherlog --count level,category log-file.log
 ```
 
 *Don't forget to set an operation or `sherlog` will not show anything in your console!*
